@@ -15,9 +15,8 @@ function semanaActual(){
   generarReporte(now.getWeek())
 }
 function elegirSemana(){
-// var NUMSEMANA=SpreadsheetApp.getActive().getSheetByName("Reporte").getRange("A7").getValue();
-  var NUMSEMANA=Browser.inputBox("Introduce el numero de semana");
-generarReporte(NUMSEMANA)
+//  var NUMSEMANA=Browser.inputBox("Introduce el numero de semana");
+generarReporte(31)
   
 }
 function prinbt(){
@@ -38,15 +37,12 @@ function generarReporte(NUMSEMANA){
   fin=0;
   inicioEncontrado=false;
   elementos=0;
-  console.log("probando dos") 
+  contador=0;
+  indiceMes=0;
 
 //  Se busca el rango de la semana para pegarse
   for(i=0; i<indexes.getValues()[0].length;i++){
-   if(indexes.getValues()[0][i]==NUMSEMANA){
-     if(elementos==7){
-       console.log("se encontraron todos los elementos")
-     break;
-     }
+    if(indexes.getValues()[0][i]==NUMSEMANA){
      elementos++;
      console.log("SEMANA ENCONTRADA EN"+i)
      if(inicioEncontrado==false){
@@ -55,17 +51,26 @@ function generarReporte(NUMSEMANA){
      }else{
      fin=i;
      }
-   }
+    }else if(indexes.getValues()[0][i]==""){
+      console.log("indiceMes:"+i);
+      indiceMes=i;
+    }
+    
+    if(elementos==7){
+       console.log("se encontraron todos los elementos")
+     break;
+     }
   }
-  
-  console.log("inicio:"+inicio+" fin:"+fin);
   numRows=rangetemas.getValues().length;
-  temp.getRange(1, 1, numRows).setValues(rangetemas.getValues())
-  inicio=inicio+1
-//  Una vez con el rango se copia y pega en la hoja
-  rangosemana=sheettemas.getRange(1, inicio, sheettemas.getLastRow(), 7)
-  console.log(fin-inicio)
-  temp.getRange(1, 2, numRows,7 ).setValues(rangosemana.getValues())
-  Browser.msgBox("Reporte generado de semana:"+NUMSEMANA);
+  inicio++;
+  fin++;
+  console.log("inicio:"+inicio+" fin:"+fin+" numRows"+numRows+" elementos"+elementos);
+  temp.getRange(1, 1, numRows).setValues(rangetemas.getValues());
+  //  Una vez con el rango se copia y pega en la hoja
+  borrarColumna=(indiceMes-inicio)+1
+  rangosemana=sheettemas.getRange(1, inicio, sheettemas.getLastRow(), elementos)
+  temp.getRange(1, 2, numRows,elementos ).setValues(rangosemana.getValues())
+  console.log(borrarColumna)
   
+  Browser.msgBox("Reporte generado de semana:"+NUMSEMANA);
 }
